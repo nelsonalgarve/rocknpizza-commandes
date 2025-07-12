@@ -1,5 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+interface WooLineItem {
+  product_id: number;
+  name: string;
+  quantity: number;
+  total: string;
+  total_tax: string;
+  short_description?: string;
+}
+
+interface WooOrder {
+  id: number;
+  status: string;
+  billing: {
+    first_name: string;
+    last_name: string;
+    phone: string;
+    email: string;
+  };
+  line_items: WooLineItem[];
+  total: string;
+  [key: string]: unknown; // <== plus propre que `any`
+}
+
+interface WooProduct {
+  short_description?: string;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const wcBase = process.env.WOOCOMMERCE_URL!;
@@ -10,7 +37,6 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const status = searchParams.get('status') || 'processing,preparation,completed';
-
     const perPage = searchParams.get('per_page') || '20';
 
     const res = await fetch(`${wcBase}/wp-json/wc/v3/orders?status=${status}&per_page=${perPage}`, {
@@ -27,12 +53,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Erreur WooCommerce' }, { status: 500 });
     }
 
-    const orders = await res.json();
+    const orders = (await res.json()) as WooOrder[];
 
-    const enrichedOrders = await Promise.all(
-      orders.map(async (order: any) => {
-        const itemsWithDesc = await Promise.all(
-          order.line_items.map(async (item: any) => {
+    const enrichedOrders: WooOrder[] = await Promise.all(
+      orders.map(async (order) => {
+        const itemsWithDesc: WooLineItem[] = await Promise.all(
+          order.line_items.map(async (item) => {
             try {
               const productRes = await fetch(`${wcBase}/wp-json/wc/v3/products/${item.product_id}`, {
                 headers: {
@@ -44,12 +70,12 @@ export async function GET(request: NextRequest) {
 
               if (!productRes.ok) return item;
 
-              const product = await productRes.json();
+              const product = (await productRes.json()) as WooProduct;
               return {
                 ...item,
                 short_description: product.short_description,
               };
-            } catch (err) {
+            } catch {
               return item;
             }
           })
@@ -63,7 +89,7 @@ export async function GET(request: NextRequest) {
     );
 
     return NextResponse.json(enrichedOrders);
-  } catch (err) {
+  } catch (err: unknown) {
     console.error('Erreur serveur GET commandes:', err);
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }

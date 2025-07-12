@@ -29,7 +29,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
       <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-sm">
-        <h1 className="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Connexion Rock'n Pizza</h1>
+        <h1 className="text-xl font-bold mb-6 text-center text-gray-800 dark:text-white">Connexion Rock n Pizza</h1>
 
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 

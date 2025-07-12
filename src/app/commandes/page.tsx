@@ -39,19 +39,19 @@ export default function CommandesPage() {
   const previousIds = useRef<Set<number>>(new Set());
   const router = useRouter();
 
-  useEffect(() => {
-    const token = localStorage.getItem('jwt');
-    if (!token) {
-      router.push('/login');
-    } else {
-      setHasMounted(true);
-    }
-  }, [router]);
-
-  //   useEffect(() => {
+  // useEffect(() => {
+  //   const token = localStorage.getItem('jwt');
+  //   if (!token) {
+  //     router.push('/login');
+  //   } else {
   //     setHasMounted(true);
+  //   }
+  // }, [router]);
+
+    useEffect(() => {
+      setHasMounted(true);
  
-  // }, []);
+  }, []);
 
   useEffect(() => {
     const fetchCommandes = async () => {
@@ -159,7 +159,7 @@ export default function CommandesPage() {
       <header className="flex items-center justify-between mb-6 border-b pb-4 dark:border-gray-700">
         <div className="flex items-center gap-4">
           <Image src="/logo.png" alt="Rock'n Pizza" width={50} height={50} />
-          <h1 className="text-2xl font-bold dark:text-white">Rock'n Pizza – Commandes</h1>
+          <h1 className="text-2xl font-bold dark:text-white">Rock n Pizza – Commandes</h1>
         </div>
         <div className="flex items-center gap-4">
           <button
