@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Record<string, string | string[]> }
 ) {
-  const id = params.id;
+  const id = context.params.id as string;
 
   try {
     const updateData = await request.json();
