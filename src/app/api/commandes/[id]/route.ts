@@ -33,7 +33,7 @@ export async function PATCH(
 
     const updatedOrder = await res.json();
     return NextResponse.json(updatedOrder);
-  } catch (err) {
+  } catch (err: unknown) {
     console.error('Erreur serveur PATCH commande:', err);
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
   }
