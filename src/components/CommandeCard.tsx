@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
 
 interface LineItem {
   name: string;
@@ -30,7 +30,6 @@ interface Props {
 }
 
 export default function CommandeCard({ commande, onUpdate, onPrint }: Props) {
-  const [highlightedCommandeId, setHighlightedCommandeId] = useState<number | null>(null);
 
   const totalTTC = (item: LineItem) => (
     (parseFloat(item.total) + parseFloat(item.total_tax)).toFixed(2)
